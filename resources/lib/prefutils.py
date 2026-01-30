@@ -645,8 +645,9 @@ class LangPrefMan_Player(xbmc.Player):
         """
         Get the audio track index that matches the original_preferred_list. If no audio track matches, return None.
         The audio track is searched by language, checking for the isoriginal tag. If multiple original found (weird...) the first one is returned.
+        Blacklisted audio tracks, if any, are excluded.
 
-        :return: The first audio track index tagged as isoriginal and that matches the original_preferred_list.
+        :return: The first audio track index tagged as isoriginal, that matches the original_preferred_list, and is not blacklisted.
                 -1 if the current selected audio track is already correct (to avoid unnecessary audio change)
                  None if no original audio track found or no match.       
         """
@@ -655,6 +656,7 @@ class LangPrefMan_Player(xbmc.Player):
         found_original_audio_languages = [[stream['index'],stream['language']] for stream in self.audiostreams if
                                           ('index' in stream and 'language' in stream and 'isoriginal' in stream
                                             and stream['language'] in settings.audio_original_preflist
+                                            and not self.isInBlacklist(stream['name'],'Audio')
 								            and stream['isoriginal'])]
 
         if found_original_audio_languages:
@@ -732,8 +734,7 @@ class LangPrefMan_Player(xbmc.Player):
             self.subtitles = json_response['result']['subtitles']
         log(LOG_DEBUG, json_response)
 
-        if (
-                not settings.custom_condsub_prefs_on and not settings.custom_audio_prefs_on and not settings.custom_sub_prefs_on):
+        if (not settings.custom_condsub_prefs_on and not settings.custom_audio_prefs_on and not settings.custom_sub_prefs_on):
             log(LOG_DEBUG, 'No custom prefs used at all, skipping extra Video tags/genres JSON query.')
             self.genres_and_tags = set()
             return
