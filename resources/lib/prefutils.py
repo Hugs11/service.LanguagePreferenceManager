@@ -645,7 +645,7 @@ class LangPrefMan_Player(xbmc.Player):
         """
         Get the audio track index that matches the original_preferred_list. If no audio track matches, return None.
         The audio track is searched by language, checking for the isoriginal tag. If multiple original found (weird...) the first one is returned.
-        Blacklisted audio tracks, if any, are excluded.
+        Blacklisted original audio tracks, if any, are excluded.
 
         :return: The first audio track index tagged as isoriginal, that matches the original_preferred_list, and is not blacklisted.
                 -1 if the current selected audio track is already correct (to avoid unnecessary audio change)
@@ -656,8 +656,19 @@ class LangPrefMan_Player(xbmc.Player):
         found_original_audio_languages = [[stream['index'],stream['language']] for stream in self.audiostreams if
                                           ('index' in stream and 'language' in stream and 'isoriginal' in stream
                                             and stream['language'] in settings.audio_original_preflist
-                                            and not self.isInBlacklist(stream['name'],'Audio')
 								            and stream['isoriginal'])]
+        
+        # Find all blacklisted audio tracks (index, language)
+        blacklisted_audio_languages = [[stream['index'],stream['language']] for stream in self.audiostreams if
+                                          ('index' in stream and 'language' in stream and 'name' in stream
+                                            and self.isInBlacklist(stream['name'],'Audio'))]
+        # ... and ignore them if any 'isoriginal'
+        for indexlang in blacklisted_audio_languages:
+	        if indexlang in found_original_audio_languages:
+                 found_original_audio_languages.remove(indexlang)
+                 log(LOG_INFO,
+                    "Audio: one Original audio track matches Keyword Blacklist : {0}. Skipping it.".format(
+                            ','.join(settings.audio_keyword_blacklist)))
 
         if found_original_audio_languages:
             if found_original_audio_languages[0][0] != self.selected_audio_stream['index']:

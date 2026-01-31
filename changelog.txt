@@ -1,4 +1,4 @@
---- Version 1.0.9Beta1
+--- Version 1.0.9Beta2
 
 - Fix audio blacklist was not considered when searching for Original audio tracks
 
