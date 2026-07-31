@@ -1,0 +1,67 @@
+name: Build Kodi add-on
+
+on:
+  push:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  test-and-build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Run tests
+        env:
+          PYTHONDONTWRITEBYTECODE: "1"
+        run: python -m unittest discover -s tests -v
+
+      - name: Validate XML and read version
+        id: metadata
+        shell: bash
+        run: |
+          python - <<'PY'
+          import os
+          import xml.etree.ElementTree as ET
+
+          addon = ET.parse("addon.xml").getroot()
+          ET.parse("resources/settings.xml")
+          version = addon.attrib["version"]
+          with open(os.environ["GITHUB_OUTPUT"], "a", encoding="utf-8") as output:
+              output.write("version=" + version + "\n")
+          PY
+
+      - name: Build installable ZIP
+        id: package
+        shell: bash
+        run: |
+          addon_id="service.languagepreferencemanager"
+          version="${{ steps.metadata.outputs.version }}"
+          package_root="build/package/${addon_id}"
+          artifact="build/${addon_id}-${version}.zip"
+
+          mkdir -p "${package_root}"
+          cp -a addon.xml default.py README.md LICENSE.txt changelog.txt resources "${package_root}/"
+          cd build/package
+          zip -qr "../${addon_id}-${version}.zip" "${addon_id}"
+          cd ../..
+          unzip -t "${artifact}"
+          echo "artifact=${artifact}" >> "${GITHUB_OUTPUT}"
+
+      - name: Upload installable add-on
+        uses: actions/upload-artifact@v4
+        with:
+          name: service.languagepreferencemanager-${{ steps.metadata.outputs.version }}
+          path: ${{ steps.package.outputs.artifact }}
+          if-no-files-found: error
+          retention-days: 30
+

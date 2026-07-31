@@ -1,10 +1,34 @@
 service.LanguagePreferenceManager
 =================================
 
+[![Build Kodi add-on](https://github.com/Hugs11/service.LanguagePreferenceManager/actions/workflows/build.yml/badge.svg)](https://github.com/Hugs11/service.LanguagePreferenceManager/actions/workflows/build.yml)
+
 A manager for audio and subtitle preferences
 ============================================
 
 This addon provides an easy way to set your preferred audio streams and subtitle languages in Kodi.
+
+This is a small community fork of
+[rockrider69/service.LanguagePreferenceManager](https://github.com/rockrider69/service.LanguagePreferenceManager),
+focused on distinguishing regional and script variants that share the same
+legacy ISO 639 language code in Kodi.
+
+Regional and script variants are supported for languages commonly found more
+than once in the same media file: English (United States/United Kingdom), French
+(Canada/France), Spanish (Latin America/Spain), Portuguese (Brazil/Portugal),
+and Chinese (Simplified/Traditional). The add-on first uses a BCP-47 language
+tag when Kodi exposes one, then recognizes common labels in the track name.
+A generic language preference remains compatible with every one of its
+variants.
+
+For custom preferences, use `en-us`, `en-gb`, `fr-ca`, `fr-fr`, `es-419`,
+`es-es`, `pt-br`, `pt-pt`, `zh-hans`, or `zh-hant`. A regional preference
+selects an exact variant first, then an unlabelled track of the same language;
+it does not silently select a track explicitly labelled as another region.
+
+Installable ZIP files are produced automatically by GitHub Actions. Open the
+[latest build](https://github.com/Hugs11/service.LanguagePreferenceManager/actions/workflows/build.yml),
+select the most recent successful run, and download its artifact.
 
 You can select which audio tracks and subtitles to automatically activate based on your priorities, and define simple conditional rules like "if audio is xxx then activate subtitles yyy" via drop/down lists.
 More advanced custom rules can be defined as well (see changelog for more on the syntax. Note that custom rules always take precedence over others).
