@@ -1,3 +1,18 @@
+--- Version 1.1.1
+
+- Group each regional/script variant directly after its base language in every
+  settings spinner so variants remain discoverable when using arrow controls.
+
+--- Version 1.1.0
+
+- Add locale-aware audio and subtitle selection instead of picking the first
+  track when multiple tracks share an ISO 639 language code.
+- Prefer BCP-47 language tags, then recognize common region/script labels in
+  track titles, while retaining generic language preferences as a fallback.
+- Add English (US/UK), French (Canada/France), Spanish (Latin America/Spain),
+  Portuguese (Portugal; Brazil already existed), and Chinese
+  (Simplified/Traditional) preferences.
+
 --- Version 1.0.8
 
 - Fix addon not closing properly when "Store Preferences" is used (Kodi exit : freeze on Piers, thread error message on Omega)
@@ -135,4 +150,3 @@ typos
 --- Version 0.0.1
 
 First version of Language Preference Manager.
-
