@@ -8,7 +8,7 @@ A manager for audio and subtitle preferences
 
 This addon provides an easy way to set your preferred audio streams and subtitle languages in Kodi.
 
-This is a small community fork of
+This is a small fork of
 [rockrider69/service.LanguagePreferenceManager](https://github.com/rockrider69/service.LanguagePreferenceManager),
 focused on distinguishing regional and script variants that share the same
 legacy ISO 639 language code in Kodi.
