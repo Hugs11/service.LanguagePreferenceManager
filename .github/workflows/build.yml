@@ -5,7 +5,7 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: write
 
 jobs:
   test-and-build:
@@ -65,3 +65,15 @@ jobs:
           if-no-files-found: error
           retention-days: 30
 
+      - name: Publish GitHub Release
+        if: startsWith(github.ref, 'refs/tags/v')
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          gh release create "${GITHUB_REF_NAME}" \
+            "${{ steps.package.outputs.artifact }}" \
+            --repo "${GITHUB_REPOSITORY}" \
+            --verify-tag \
+            --title "Language Preference Manager ${GITHUB_REF_NAME}" \
+            --notes "Adds regional and script-aware language selection, including French (Canada) and French (France), while preserving existing generic language preferences."

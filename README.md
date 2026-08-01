@@ -26,9 +26,10 @@ For custom preferences, use `en-us`, `en-gb`, `fr-ca`, `fr-fr`, `es-419`,
 selects an exact variant first, then an unlabelled track of the same language;
 it does not silently select a track explicitly labelled as another region.
 
-Installable ZIP files are produced automatically by GitHub Actions. Open the
-[latest build](https://github.com/Hugs11/service.LanguagePreferenceManager/actions/workflows/build.yml),
-select the most recent successful run, and download its artifact.
+Installable ZIP files are available from the
+[latest release](https://github.com/Hugs11/service.LanguagePreferenceManager/releases/latest).
+GitHub Actions also runs the tests and builds a temporary artifact on every
+push.
 
 You can select which audio tracks and subtitles to automatically activate based on your priorities, and define simple conditional rules like "if audio is xxx then activate subtitles yyy" via drop/down lists.
 More advanced custom rules can be defined as well (see changelog for more on the syntax. Note that custom rules always take precedence over others).
